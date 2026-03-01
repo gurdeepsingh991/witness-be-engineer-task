@@ -461,6 +461,7 @@ dotnet test --logger "console;verbosity=detailed"
 
 - [ ] Add authentication/authorization (OAuth 2.0, JWT)
 - [ ] Implement retry policies with exponential backoff (Polly)
+- [ ] Implement parsing logic with AI (integrate commented AI Parser with Azure Function)
 - [ ] Add distributed caching (Redis)
 - [ ] Implement event sourcing for audit trail
 - [ ] Add comprehensive logging (Serilog)
