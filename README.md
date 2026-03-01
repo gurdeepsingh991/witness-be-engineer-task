@@ -465,7 +465,6 @@ dotnet test --logger "console;verbosity=detailed"
 - [ ] Implement event sourcing for audit trail
 - [ ] Add comprehensive logging (Serilog)
 - [ ] Containerize with Docker
-- [ ] Deploy to Azure (App Service, Functions)
 - [ ] Add rate limiting
 - [ ] Implement webhook notifications on job completion
 
