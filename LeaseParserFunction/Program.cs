@@ -33,4 +33,12 @@ var builder = new HostBuilder()
     });
 
 var host = builder.Build();
+
+// Ensure database is created
+using (var scope = host.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LeaseDbContext>();
+    db.Database.EnsureCreated();
+}
+
 host.Run();

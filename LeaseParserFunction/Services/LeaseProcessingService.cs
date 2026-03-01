@@ -38,9 +38,31 @@ public class LeaseProcessingService
                 x.EntryText != null &&
                 x.EntryText.Any(t =>
                     !string.IsNullOrWhiteSpace(t) &&
-                    t.Contains(titleNumber)));
+                    System.Text.RegularExpressions.Regex.IsMatch(t, $@"\b{System.Text.RegularExpressions.Regex.Escape(titleNumber)}\b"))).ToList();
 
-            var parsed = _parser.Parse(filtered);
+            if (filtered.Count == 0)
+            {
+                job.Status = JobStatus.NotFound;
+                job.LastError = null;
+                job.UpdatedAt = DateTimeOffset.UtcNow;
+                await _db.SaveChangesAsync();
+                return;
+            }
+
+            var parsed = _parser.Parse(filtered).ToList();
+
+            if (parsed.Count == 0 || !parsed.Any(p => 
+                !string.IsNullOrWhiteSpace(p.PropertyDescription) ||
+                !string.IsNullOrWhiteSpace(p.RegistrationDateAndPlanRef) ||
+                !string.IsNullOrWhiteSpace(p.DateOfLeaseAndTerm) ||
+                !string.IsNullOrWhiteSpace(p.LesseesTitle)))
+            {
+                job.Status = JobStatus.NotFound;
+                job.LastError = null;
+                job.UpdatedAt = DateTimeOffset.UtcNow;
+                await _db.SaveChangesAsync();
+                return;
+            }
 
             var json = JsonSerializer.Serialize(parsed);
 
